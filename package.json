@@ -17,6 +17,9 @@
   "dependencies": {
     "xml2js": "0.2.2"
   },
+  "devDependencies": {
+    "cli-table": "0.2.0"
+  },
   "keywords": [
     "icecast",
     "admin",
