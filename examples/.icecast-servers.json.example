@@ -1,0 +1,4 @@
+[
+  "http://admin:password@hostname1:8000/",
+  "http://admin:password@hostname2:8000/"
+]
