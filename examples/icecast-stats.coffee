@@ -28,8 +28,13 @@ for server in servers
                 val = parseInt data.icestats[key][0]
                 total[key] += val
                 row.push val
-            table.push line
+            lines.push line
             if not --counter
+                lines = lines.sort (a, b) ->
+                    for own a_key, a_value of a
+                        for own b_key, b_value of b
+                            return a_key.localeCompare b_key
+                table.push line for line in lines
                 line = {}
                 row = line['Total'] = []
                 for key, value of total
