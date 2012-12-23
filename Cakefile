@@ -1,10 +1,19 @@
 {spawn, exec} = require 'child_process'
 
+call = (command, args = [], fn = null) ->
+  exec "#{command} #{args.join(' ')}", (err, stdout, stderr) ->
+    if err?
+      console.error "Error :"
+      return console.dir   err
+    fn err if fn
+
+system = (command, args) ->
+  spawn command, args, stdio: "inherit"
+
 task 'build', 'continually build the JavaScript code', ->
-      coffee = spawn 'coffee', ['-cw', '-o', 'lib', 'src']
-      coffee.stdout.on 'data', (data) -> console.log data.toString().trim()
-      coffeeExamples = spawn 'coffee', ['-cw', '-o', 'examples', 'examples']
-      coffeeExamples.stdout.on 'data', (data) -> console.log data.toString().trim()
+  call 'coffee',     ['-c', '-o', 'lib', 'src']
+  call 'coffee',     ['-c', '-o', 'examples', 'examples']
+  call 'browserify', ['src/BrowserEntry.coffee', '-o', 'browser/icecast-admin.js']
 
 task 'doc', 'rebuild the Docco documentation', ->
     exec([
