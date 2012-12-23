@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
 
-Admin = require('..').Admin
+{Admin} = require('..')
 
 admin = new Admin
     host: 'ted.onouo.com'

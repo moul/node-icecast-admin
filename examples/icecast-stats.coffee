@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 
 servers = require(process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.icecast-servers.json')
-Admin = require('icecast-admin').Admin
+{Admin} = require('icecast-admin')
 Table = require 'cli-table'
 
 total =
@@ -37,7 +37,6 @@ for server in servers
                 table.push line for line in lines
                 line = {}
                 row = line['Total'] = []
-                for key, value of total
-                    row.push value
+                row.push value for key, value of total
                 table.push line
                 console.log table.toString()
