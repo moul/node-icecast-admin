@@ -6,21 +6,30 @@
 
   Admin = require('..').Admin;
 
+  if (process.argv.length < 3) {
+    console.log("usage: getstats_url.coffee 'http://username:password@hostname:port/'");
+    process.exit(1);
+  }
+
   admin = new Admin({
     url: process.argv[2]
   });
 
-  admin.getStats(function(result) {
+  admin.getStats(function(err, result) {
     var source, _i, _len, _ref, _results;
-    console.log('result', result);
-    console.log("" + result.icestats.source.length + " sources");
-    _ref = result.icestats.source;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      source = _ref[_i];
-      _results.push(console.log(source));
+    if (err) {
+      return console.log('Error:', err);
+    } else {
+      console.log('result', result);
+      console.log("" + result.icestats.source.length + " sources");
+      _ref = result.icestats.source;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        source = _ref[_i];
+        _results.push(console.log(source));
+      }
+      return _results;
     }
-    return _results;
   });
 
 }).call(this);

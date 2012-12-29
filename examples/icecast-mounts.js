@@ -31,38 +31,42 @@
     admin = new Admin({
       url: server
     });
-    return admin.getStats(function(data) {
+    return admin.getStats(function(err, data) {
       var key, line, row, source, val, _j, _k, _l, _len1, _len2, _len3, _ref;
-      _ref = data.icestats.source;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        source = _ref[_j];
-        line = {};
-        row = line["" + (admin.options.hostname.toString()) + " - " + source.server_name[0]] = [];
-        for (_k = 0, _len2 = keys.length; _k < _len2; _k++) {
-          key = keys[_k];
-          val = source[key][0];
-          row.push(val);
-        }
-        lines.push(line);
-      }
-      if (!--counter) {
-        lines = lines.sort(function(a, b) {
-          var a_key, a_value, b_key, b_value;
-          for (a_key in a) {
-            if (!__hasProp.call(a, a_key)) continue;
-            a_value = a[a_key];
-            for (b_key in b) {
-              if (!__hasProp.call(b, b_key)) continue;
-              b_value = b[b_key];
-              return a_key.localeCompare(b_key);
-            }
+      if (err) {
+        return console.log('error:', err);
+      } else {
+        _ref = data.icestats.source;
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          source = _ref[_j];
+          line = {};
+          row = line["" + (admin.options.hostname.toString()) + " - " + source.server_name[0]] = [];
+          for (_k = 0, _len2 = keys.length; _k < _len2; _k++) {
+            key = keys[_k];
+            val = source[key][0];
+            row.push(val);
           }
-        });
-        for (_l = 0, _len3 = lines.length; _l < _len3; _l++) {
-          line = lines[_l];
-          table.push(line);
+          lines.push(line);
         }
-        return console.log(table.toString());
+        if (!--counter) {
+          lines = lines.sort(function(a, b) {
+            var a_key, a_value, b_key, b_value;
+            for (a_key in a) {
+              if (!__hasProp.call(a, a_key)) continue;
+              a_value = a[a_key];
+              for (b_key in b) {
+                if (!__hasProp.call(b, b_key)) continue;
+                b_value = b[b_key];
+                return a_key.localeCompare(b_key);
+              }
+            }
+          });
+          for (_l = 0, _len3 = lines.length; _l < _len3; _l++) {
+            line = lines[_l];
+            table.push(line);
+          }
+          return console.log(table.toString());
+        }
       }
     });
   };

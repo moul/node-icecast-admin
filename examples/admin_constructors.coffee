@@ -8,26 +8,26 @@ process.stdout.write '\u001B[2J\u001B[0;0f'
 admins = []
 
 admins.push new Admin
-    url: 'http://username:password@hostname:port/'
+  url: 'http://username:password@hostname:port/'
 
 admins.push new Admin
-    hostname: 'hostname'
-    port: 'port'
-    username: 'username'
-    password: 'port'
+  hostname: 'hostname'
+  port:     'port'
+  username: 'username'
+  password: 'port'
 
 admins.push new Admin
-    host: 'hostname'
-    password: 'password'
+  host:     'hostname'
+  password: 'password'
 
 admins.push new Admin
-    hostname: 'hostname'
-    password: 'password'
+  hostname: 'hostname'
+  password: 'password'
 
 admins.push new Admin
-    host: 'hostname:port'
-    password: 'password'
+  host:     'hostname:port'
+  password: 'password'
 
 for admin in admins
-    console.log ''
-    console.log admin.options
+  console.log ''
+  console.log admin.options

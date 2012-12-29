@@ -401,7 +401,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       this.options = options;
       this.getStats = __bind(this.getStats, this);
 
-      this.parseStats = __bind(this.parseStats, this);
+      this.parseXml = __bind(this.parseXml, this);
 
       this.fetchStats = __bind(this.fetchStats, this);
 
@@ -478,6 +478,9 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
           'Authorization': 'Basic ' + new Buffer("" + this.options.username + ":" + this.options.password).toString('base64')
         }
       });
+      client.on('error', function(err) {
+        return fn(err, {});
+      });
       client.end();
       return client.on('response', function(response) {
         var buffer;
@@ -486,19 +489,21 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
           return buffer += chunk;
         });
         return response.on('end', function() {
-          return fn(buffer);
+          if (fn) {
+            return fn(null, buffer);
+          }
         });
       });
     };
 
-    Admin.prototype.parseStats = function(buffer, fn) {
+    Admin.prototype.parseXml = function(buffer, fn) {
       var x2js;
       if (fn == null) {
         fn = null;
       }
       x2js = new (require('xml2js')).Parser({});
-      x2js.addListener('end', function(result) {
-        return fn(result);
+      x2js.on('end', function(result) {
+        return fn(null, result);
       });
       return x2js.parseString(buffer);
     };
@@ -508,8 +513,22 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       if (fn == null) {
         fn = null;
       }
-      return this.fetchStats(function(buffer) {
-        return _this.parseStats(buffer, fn);
+      return this.fetchStats(function(err, buffer) {
+        if (err) {
+          return fn(err, {});
+        }
+        return _this.parseXml(buffer, function(err, object) {
+          var _ref, _ref1;
+          if (err) {
+            return fn(err, object);
+          }
+          if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+            return fn({
+              "code": 'INVALID XML'
+            }, object);
+          }
+          return fn(null, object);
+        });
       });
     };
 

@@ -10,8 +10,12 @@
     password: 'ia6MuiCh'
   });
 
-  admin.getStats(function(result) {
-    return console.log('result', result);
+  admin.getStats(function(err, result) {
+    if (err) {
+      return console.log("Error:", err);
+    } else {
+      return console.log('result', result);
+    }
   });
 
 }).call(this);

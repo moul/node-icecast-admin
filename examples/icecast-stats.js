@@ -31,42 +31,46 @@
     admin = new Admin({
       url: server
     });
-    return admin.getStats(function(data) {
+    return admin.getStats(function(err, data) {
       var key, line, row, val, value, _j, _len1;
-      line = {};
-      row = line[admin.options.hostname.toString()] = [];
-      for (key in total) {
-        value = total[key];
-        val = parseInt(data.icestats[key][0]);
-        total[key] += val;
-        row.push(val);
-      }
-      lines.push(line);
-      if (!--counter) {
-        lines = lines.sort(function(a, b) {
-          var a_key, a_value, b_key, b_value;
-          for (a_key in a) {
-            if (!__hasProp.call(a, a_key)) continue;
-            a_value = a[a_key];
-            for (b_key in b) {
-              if (!__hasProp.call(b, b_key)) continue;
-              b_value = b[b_key];
-              return a_key.localeCompare(b_key);
-            }
-          }
-        });
-        for (_j = 0, _len1 = lines.length; _j < _len1; _j++) {
-          line = lines[_j];
-          table.push(line);
-        }
+      if (err) {
+        return console.log('error:', err);
+      } else {
         line = {};
-        row = line['Total'] = [];
+        row = line[admin.options.hostname.toString()] = [];
         for (key in total) {
           value = total[key];
-          row.push(value);
+          val = parseInt(data.icestats[key][0]);
+          total[key] += val;
+          row.push(val);
         }
-        table.push(line);
-        return console.log(table.toString());
+        lines.push(line);
+        if (!--counter) {
+          lines = lines.sort(function(a, b) {
+            var a_key, a_value, b_key, b_value;
+            for (a_key in a) {
+              if (!__hasProp.call(a, a_key)) continue;
+              a_value = a[a_key];
+              for (b_key in b) {
+                if (!__hasProp.call(b, b_key)) continue;
+                b_value = b[b_key];
+                return a_key.localeCompare(b_key);
+              }
+            }
+          });
+          for (_j = 0, _len1 = lines.length; _j < _len1; _j++) {
+            line = lines[_j];
+            table.push(line);
+          }
+          line = {};
+          row = line['Total'] = [];
+          for (key in total) {
+            value = total[key];
+            row.push(value);
+          }
+          table.push(line);
+          return console.log(table.toString());
+        }
       }
     });
   };
