@@ -399,6 +399,12 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
 
     function Admin(options) {
       this.options = options;
+      this.killSource = __bind(this.killSource, this);
+
+      this.killClient = __bind(this.killClient, this);
+
+      this.moveCLients = __bind(this.moveCLients, this);
+
       this.updateFallback = __bind(this.updateFallback, this);
 
       this.updateMetadata = __bind(this.updateMetadata, this);
@@ -648,6 +654,18 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
         }
         return fn(err, object);
       });
+    };
+
+    Admin.prototype.moveCLients = function() {
+      return console.log("TODO");
+    };
+
+    Admin.prototype.killClient = function() {
+      return console.log("TODO");
+    };
+
+    Admin.prototype.killSource = function() {
+      return console.log("TODO");
     };
 
     return Admin;
