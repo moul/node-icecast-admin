@@ -67,4 +67,9 @@ class Admin
       return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
       return fn null, object
 
+  listClients: (mountpoint, fn = null) =>
+    @fetchAndParse "admin/listclients?mount=#{mountpoint}", (err, object) =>
+      return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
+      return fn null, object
+
 module.exports = Admin

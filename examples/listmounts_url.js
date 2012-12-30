@@ -4,7 +4,7 @@
 
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
-  Admin = require('../src/Admin');
+  Admin = require('icecast-admin').Admin;
 
   if (process.argv.length < 3) {
     console.log("usage: listmounts_url.coffee 'http://username:password@hostname:port/'");
