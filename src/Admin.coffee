@@ -63,22 +63,31 @@ class Admin
 
   stats: (fn = null) =>
     @fetchAndParse "admin/stats", (err, object) =>
-      return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
+      return fn {"code": 'INVALID XML'}, object unless object.icestats?.source?[0]?
       return fn null, object
 
   listMounts: (fn = null) =>
     @fetchAndParse "admin/listmounts", (err, object) =>
-      return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
+      return fn {"code": 'INVALID XML'}, object unless object.icestats?.source?[0]?
       return fn null, object
 
   listClients: (mountpoint, fn = null) =>
     @fetchAndParse "admin/listclients?mount=#{mountpoint}", (err, object) =>
-      return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
+      return fn {"code": 'INVALID XML'}, object unless object.icestats?.source?[0]?
       return fn null, object
 
   updateMetadata: (options, fn = null) =>
+    return fn {"BADPARAMS"}, {} unless options.mount?
+    return fn {"BADPARAMS"}, {} unless options.song?
     @fetchAndParse "admin/metadata?mount=#{options.mount}&mode=updinfo&song=#{encodeURI(options.song)}", (err, object) =>
-      return fn {"code": "INVALID XML"}, object if not object.iceresponse?.message?[0]?
+      return fn {"code": "INVALID XML"}, object unless object.iceresponse?.message?[0]?
+      return fn err, object
+
+  updateFallback: (options, fn = null) =>
+    return fn {"BADPARAMS"}, {} unless options.mount?
+    return fn {"BADPARAMS"}, {} unless options.fallback?
+    @fetchAndParse "admin/fallbacks?mount=#{options.mount}&fallback=#{options.fallback}", (err, object) =>
+      return fn {"code": "FAILED"}, object unless object.html?.head?
       return fn err, object
 
 module.exports = Admin

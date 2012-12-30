@@ -399,6 +399,8 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
 
     function Admin(options) {
       this.options = options;
+      this.updateFallback = __bind(this.updateFallback, this);
+
       this.updateMetadata = __bind(this.updateMetadata, this);
 
       this.listClients = __bind(this.listClients, this);
@@ -555,7 +557,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       }
       return this.fetchAndParse("admin/stats", function(err, object) {
         var _ref, _ref1;
-        if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+        if (((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) == null) {
           return fn({
             "code": 'INVALID XML'
           }, object);
@@ -571,7 +573,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       }
       return this.fetchAndParse("admin/listmounts", function(err, object) {
         var _ref, _ref1;
-        if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+        if (((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) == null) {
           return fn({
             "code": 'INVALID XML'
           }, object);
@@ -587,7 +589,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       }
       return this.fetchAndParse("admin/listclients?mount=" + mountpoint, function(err, object) {
         var _ref, _ref1;
-        if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+        if (((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) == null) {
           return fn({
             "code": 'INVALID XML'
           }, object);
@@ -601,11 +603,47 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       if (fn == null) {
         fn = null;
       }
+      if (options.mount == null) {
+        return fn({
+          "BADPARAMS": "BADPARAMS"
+        }, {});
+      }
+      if (options.song == null) {
+        return fn({
+          "BADPARAMS": "BADPARAMS"
+        }, {});
+      }
       return this.fetchAndParse("admin/metadata?mount=" + options.mount + "&mode=updinfo&song=" + (encodeURI(options.song)), function(err, object) {
         var _ref, _ref1;
-        if (!(((_ref = object.iceresponse) != null ? (_ref1 = _ref.message) != null ? _ref1[0] : void 0 : void 0) != null)) {
+        if (((_ref = object.iceresponse) != null ? (_ref1 = _ref.message) != null ? _ref1[0] : void 0 : void 0) == null) {
           return fn({
             "code": "INVALID XML"
+          }, object);
+        }
+        return fn(err, object);
+      });
+    };
+
+    Admin.prototype.updateFallback = function(options, fn) {
+      var _this = this;
+      if (fn == null) {
+        fn = null;
+      }
+      if (options.mount == null) {
+        return fn({
+          "BADPARAMS": "BADPARAMS"
+        }, {});
+      }
+      if (options.fallback == null) {
+        return fn({
+          "BADPARAMS": "BADPARAMS"
+        }, {});
+      }
+      return this.fetchAndParse("admin/fallbacks?mount=" + options.mount + "&fallback=" + options.fallback, function(err, object) {
+        var _ref;
+        if (((_ref = object.html) != null ? _ref.head : void 0) == null) {
+          return fn({
+            "code": "FAILED"
           }, object);
         }
         return fn(err, object);
