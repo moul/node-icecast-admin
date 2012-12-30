@@ -1,6 +1,7 @@
 class Admin
   constructor: (@options) ->
     do @handleOptions
+    @http = require 'http'
     return @
 
   handleOptions: =>
@@ -19,21 +20,24 @@ class Admin
     @options.path ?=       '/'
     @options.pathname ?=   @options.path
     @options.host =        "#{@options.hostname}:#{@options.port}"
+    @options.verbose ?=    false
     delete @options.href
     delete @options.url
     delete @options.slashes
     delete @options.auth
 
   fetchXml: (path, fn = null) =>
-    client = require('http').request
+    fullpath = "#{@options.path}#{path}"
+    if @options.verbose
+      console.info "Fetching #{fullpath}"
+    client = @http.request
       host:   @options.hostname
       port:   @options.port
       method: 'GET'
-      path:   "#{@options.path}#{path}"
+      path:   fullpath
       headers:
         'Host':          @options.hostname
         'Authorization': 'Basic ' + new Buffer("#{@options.username}:#{@options.password}").toString('base64')
-
     client.on 'error', (err) -> fn err, {}
     client.end()
     client.on 'response', (response) ->

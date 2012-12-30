@@ -16,7 +16,6 @@ admin.stats (err, result) ->
   if err
     console.log 'Error:', err
   else
-    console.log 'result', result
     console.log "#{result.icestats.source.length} sources"
     for source in result.icestats.source
       console.log source

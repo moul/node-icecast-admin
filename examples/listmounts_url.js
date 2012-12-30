@@ -7,7 +7,7 @@
   Admin = require('icecast-admin').Admin;
 
   if (process.argv.length < 3) {
-    console.log("usage: listmounts_url.coffee 'http://username:password@hostname:port/'");
+    console.log("usage: " + process.argv[1] + " 'http://username:password@hostname:port/'");
     process.exit(1);
   }
 

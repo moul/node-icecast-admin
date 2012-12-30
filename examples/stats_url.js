@@ -7,7 +7,7 @@
   Admin = require('icecast-admin').Admin;
 
   if (process.argv.length < 3) {
-    console.log("usage: stats_url.coffee 'http://username:password@hostname:port/'");
+    console.log("usage: " + process.argv[1] + " 'http://username:password@hostname:port/'");
     process.exit(1);
   }
 
@@ -20,7 +20,6 @@
     if (err) {
       return console.log('Error:', err);
     } else {
-      console.log('result', result);
       console.log("" + result.icestats.source.length + " sources");
       _ref = result.icestats.source;
       _results = [];
