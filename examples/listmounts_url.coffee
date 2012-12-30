@@ -7,7 +7,7 @@ process.stdout.write '\u001B[2J\u001B[0;0f'
 {Admin} = require 'icecast-admin'
 
 if process.argv.length < 3
-  console.log "usage: listmounts_url.coffee 'http://username:password@hostname:port/'"
+  console.log "usage: #{process.argv[1]} 'http://username:password@hostname:port/'"
   process.exit 1
 
 admin = new Admin
