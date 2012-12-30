@@ -7,7 +7,7 @@
   Admin = require('icecast-admin').Admin;
 
   if (process.argv.length < 3) {
-    console.log("usage: getstats_url.coffee 'http://username:password@hostname:port/'");
+    console.log("usage: stats_url.coffee 'http://username:password@hostname:port/'");
     process.exit(1);
   }
 
@@ -15,7 +15,7 @@
     url: process.argv[2]
   });
 
-  admin.getStats(function(err, result) {
+  admin.stats(function(err, result) {
     var source, _i, _len, _ref, _results;
     if (err) {
       return console.log('Error:', err);

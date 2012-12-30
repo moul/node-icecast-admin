@@ -44,7 +44,7 @@ for server in servers
     counter++
     admin = new Admin
       url: server
-    admin.getStats (err, data) ->
+    admin.stats (err, data) ->
       if err
         console.log 'error:', err
       else

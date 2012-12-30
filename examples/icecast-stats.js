@@ -31,7 +31,7 @@
     admin = new Admin({
       url: server
     });
-    return admin.getStats(function(err, data) {
+    return admin.stats(function(err, data) {
       var key, line, row, val, value, _j, _len1;
       if (err) {
         return console.log('error:', err);

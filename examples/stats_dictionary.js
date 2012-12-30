@@ -5,14 +5,14 @@
   Admin = require('icecast-admin').Admin;
 
   admin = new Admin({
-    host: 'ted.onouo.com',
+    host: 'localhost',
     port: 8000,
-    password: 'ia6MuiCh'
+    password: 'hackme'
   });
 
-  admin.getStats(function(err, result) {
+  admin.stats(function(err, result) {
     if (err) {
-      return console.log("Error:", err);
+      return console.log('Error:', err);
     } else {
       return console.log('result', result);
     }

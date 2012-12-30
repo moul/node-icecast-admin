@@ -399,11 +399,15 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
 
     function Admin(options) {
       this.options = options;
-      this.getStats = __bind(this.getStats, this);
+      this.listMounts = __bind(this.listMounts, this);
+
+      this.stats = __bind(this.stats, this);
+
+      this.fetchAndParse = __bind(this.fetchAndParse, this);
 
       this.parseXml = __bind(this.parseXml, this);
 
-      this.fetchStats = __bind(this.fetchStats, this);
+      this.fetchXml = __bind(this.fetchXml, this);
 
       this.handleOptions = __bind(this.handleOptions, this);
 
@@ -463,7 +467,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       return delete this.options.auth;
     };
 
-    Admin.prototype.fetchStats = function(fn) {
+    Admin.prototype.fetchXml = function(path, fn) {
       var client;
       if (fn == null) {
         fn = null;
@@ -472,7 +476,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
         host: this.options.hostname,
         port: this.options.port,
         method: 'GET',
-        path: "" + this.options.path + "admin/stats.xml",
+        path: "" + this.options.path + path,
         headers: {
           'Host': this.options.hostname,
           'Authorization': 'Basic ' + new Buffer("" + this.options.username + ":" + this.options.password).toString('base64')
@@ -514,27 +518,53 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       return x2js.parseString(buffer);
     };
 
-    Admin.prototype.getStats = function(fn) {
+    Admin.prototype.fetchAndParse = function(path, fn) {
       var _this = this;
       if (fn == null) {
         fn = null;
       }
-      return this.fetchStats(function(err, buffer) {
+      return this.fetchXml(path, function(err, buffer) {
         if (err) {
           return fn(err, {});
         }
         return _this.parseXml(buffer, function(err, object) {
-          var _ref, _ref1;
           if (err) {
             return fn(err, object);
           }
-          if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
-            return fn({
-              "code": 'INVALID XML'
-            }, object);
-          }
           return fn(null, object);
         });
+      });
+    };
+
+    Admin.prototype.stats = function(fn) {
+      var _this = this;
+      if (fn == null) {
+        fn = null;
+      }
+      return this.fetchAndParse("admin/stats", function(err, object) {
+        var _ref, _ref1;
+        if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+          return fn({
+            "code": 'INVALID XML'
+          }, object);
+        }
+        return fn(null, object);
+      });
+    };
+
+    Admin.prototype.listMounts = function(fn) {
+      var _this = this;
+      if (fn == null) {
+        fn = null;
+      }
+      return this.fetchAndParse("admin/listmounts", function(err, object) {
+        var _ref, _ref1;
+        if (!(((_ref = object.icestats) != null ? (_ref1 = _ref.source) != null ? _ref1[0] : void 0 : void 0) != null)) {
+          return fn({
+            "code": 'INVALID XML'
+          }, object);
+        }
+        return fn(null, object);
       });
     };
 

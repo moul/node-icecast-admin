@@ -3,12 +3,12 @@
 {Admin} = require 'icecast-admin'
 
 admin = new Admin
-  host: 'ted.onouo.com'
+  host: 'localhost'
   port: 8000
-  password: 'ia6MuiCh'
+  password: 'hackme'
 
-admin.getStats (err, result) ->
+admin.stats (err, result) ->
   if err
-    console.log "Error:", err
+    console.log 'Error:', err
   else
     console.log 'result', result
