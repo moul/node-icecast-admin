@@ -76,4 +76,9 @@ class Admin
       return fn {"code": 'INVALID XML'}, object if not object.icestats?.source?[0]?
       return fn null, object
 
+  updateMetadata: (options, fn = null) =>
+    @fetchAndParse "admin/metadata?mount=#{options.mount}&mode=updinfo&song=#{encodeURI(options.song)}", (err, object) =>
+      return fn {"code": "INVALID XML"}, object if not object.iceresponse?.message?[0]?
+      return fn err, object
+
 module.exports = Admin

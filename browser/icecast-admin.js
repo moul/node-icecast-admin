@@ -399,6 +399,8 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
 
     function Admin(options) {
       this.options = options;
+      this.updateMetadata = __bind(this.updateMetadata, this);
+
       this.listClients = __bind(this.listClients, this);
 
       this.listMounts = __bind(this.listMounts, this);
@@ -591,6 +593,22 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
           }, object);
         }
         return fn(null, object);
+      });
+    };
+
+    Admin.prototype.updateMetadata = function(options, fn) {
+      var _this = this;
+      if (fn == null) {
+        fn = null;
+      }
+      return this.fetchAndParse("admin/metadata?mount=" + options.mount + "&mode=updinfo&song=" + (encodeURI(options.song)), function(err, object) {
+        var _ref, _ref1;
+        if (!(((_ref = object.iceresponse) != null ? (_ref1 = _ref.message) != null ? _ref1[0] : void 0 : void 0) != null)) {
+          return fn({
+            "code": "INVALID XML"
+          }, object);
+        }
+        return fn(err, object);
       });
     };
 
