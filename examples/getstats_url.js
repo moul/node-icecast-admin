@@ -4,7 +4,7 @@
 
   process.stdout.write('\u001B[2J\u001B[0;0f');
 
-  Admin = require('..').Admin;
+  Admin = require('icecast-admin').Admin;
 
   if (process.argv.length < 3) {
     console.log("usage: getstats_url.coffee 'http://username:password@hostname:port/'");

@@ -1,9 +1,9 @@
 #!/usr/bin/env coffee
 
 # clear terminal
-process.stdout.write '\u001B[2J\u001B[0;0f'
+#process.stdout.write '\u001B[2J\u001B[0;0f'
 
-{Admin} = require('..')
+{Admin} = require 'icecast-admin'
 
 admins = []
 

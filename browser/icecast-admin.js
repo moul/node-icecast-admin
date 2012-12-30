@@ -484,6 +484,12 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       client.end();
       return client.on('response', function(response) {
         var buffer;
+        if (response.statusCode !== 200) {
+          return fn({
+            "code": "BADSTATUSCODE",
+            "message": response.statusCode
+          }, {});
+        }
         buffer = '';
         response.on('data', function(chunk) {
           return buffer += chunk;

@@ -2,9 +2,7 @@
 (function() {
   var Admin, admin, admins, _i, _len;
 
-  process.stdout.write('\u001B[2J\u001B[0;0f');
-
-  Admin = require('..').Admin;
+  Admin = require('icecast-admin').Admin;
 
   admins = [];
 

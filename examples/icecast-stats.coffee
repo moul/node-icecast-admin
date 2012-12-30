@@ -1,8 +1,8 @@
 #!/usr/bin/env coffee
 
 servers = require(process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.icecast-servers.json')
-{Admin} = require('icecast-admin')
-Table = require 'cli-table'
+{Admin} = require 'icecast-admin'
+Table =   require 'cli-table'
 
 total =
   client_connections:   0

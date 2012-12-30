@@ -39,6 +39,8 @@ class Admin
     client.on 'error', (err) -> fn err, {}
     client.end()
     client.on 'response', (response) ->
+      if response.statusCode != 200
+        return fn {"code": "BADSTATUSCODE", "message": response.statusCode}, {}
       buffer = ''
       response.on 'data', (chunk) ->
         buffer += chunk

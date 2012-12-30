@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
 
-{Admin} = require('..')
+{Admin} = require 'icecast-admin'
 
 admin = new Admin
   host: 'ted.onouo.com'

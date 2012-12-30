@@ -2,7 +2,7 @@
 (function() {
   var Admin, admin;
 
-  Admin = require('..').Admin;
+  Admin = require('icecast-admin').Admin;
 
   admin = new Admin({
     host: 'ted.onouo.com',
