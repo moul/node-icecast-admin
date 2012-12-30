@@ -6,8 +6,8 @@
 
   Admin = require('icecast-admin').Admin;
 
-  if (process.argv.length < 4) {
-    console.log("usage: " + process.argv[1] + " 'http://username:password@hostname:port/' '/mountpoint'");
+  if (process.argv.length < 3) {
+    console.log("usage: " + process.argv[1] + " 'http://username:password@hostname:port/'");
     process.exit(1);
   }
 
@@ -15,21 +15,37 @@
     url: process.argv[2]
   });
 
-  admin.listClients(process.argv[3], function(err, result) {
-    var listener, source, _i, _len, _ref, _results;
+  admin.listMounts(function(err, mountsRoot) {
+    var entry, _i, _len, _ref, _results;
     if (err) {
       return console.log('Error:', err);
-    } else {
-      source = result.icestats.source[0];
-      console.log("Listeners: " + source.Listeners);
-      _ref = source.listener;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        listener = _ref[_i];
-        _results.push(console.log("ID=" + listener.ID + ", IP=" + listener.IP + ", Connected=" + listener.Connected + ", UserAgent=" + listener.UserAgent));
-      }
-      return _results;
     }
+    _ref = mountsRoot.icestats.source;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      entry = _ref[_i];
+      _results.push((function() {
+        var mountpoint;
+        mountpoint = entry.$.mount;
+        return admin.listClients(mountpoint, function(err, result) {
+          var listener, source, _j, _len1, _ref1, _results1;
+          if (err) {
+            return console.log('Error:', err);
+          }
+          source = result.icestats.source[0];
+          if (source.Listeners > 0) {
+            _ref1 = source.listener;
+            _results1 = [];
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              listener = _ref1[_j];
+              _results1.push(console.log("Mountpoint=" + mountpoint + ", ID=" + listener.ID + ", IP=" + listener.IP + ", Connected=" + listener.Connected + ", UserAgent=" + listener.UserAgent));
+            }
+            return _results1;
+          }
+        });
+      })());
+    }
+    return _results;
   });
 
 }).call(this);
