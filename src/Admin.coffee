@@ -39,7 +39,7 @@ class Admin
         'Host':          @options.hostname
         'Authorization': 'Basic ' + new Buffer("#{@options.username}:#{@options.password}").toString('base64')
     client.on 'error', (err) -> fn err, {}
-    client.on 'socket', (socket) ->
+    client.on 'socket', (socket) =>
       socket.setTimeout @options.timeout
       socket.on 'timeout', ->
         do client.abort

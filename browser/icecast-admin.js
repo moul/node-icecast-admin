@@ -486,7 +486,8 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
     };
 
     Admin.prototype.fetchXml = function(path, fn) {
-      var client, fullpath;
+      var client, fullpath,
+        _this = this;
       if (fn == null) {
         fn = null;
       }
@@ -508,7 +509,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
         return fn(err, {});
       });
       client.on('socket', function(socket) {
-        socket.setTimeout(this.options.timeout);
+        socket.setTimeout(_this.options.timeout);
         return socket.on('timeout', function() {
           return client.abort();
         });
