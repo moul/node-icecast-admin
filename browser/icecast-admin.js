@@ -425,11 +425,10 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
 
       this.handleOptions();
       this.http = require('http');
-      return this;
     }
 
     Admin.prototype.handleOptions = function() {
-      var host, key, value, _base, _base1, _base10, _base2, _base3, _base4, _base5, _base6, _base7, _base8, _base9, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var host, key, value, _base, _base1, _base10, _base11, _base2, _base3, _base4, _base5, _base6, _base7, _base8, _base9, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (this.options.url != null) {
         _ref = require('url').parse(this.options.url);
         for (key in _ref) {
@@ -463,19 +462,22 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       if ((_ref8 = (_base6 = this.options).protocol) == null) {
         _base6.protocol = 'http:';
       }
-      if ((_ref9 = (_base7 = this.options).port) == null) {
-        _base7.port = this.options.protocol === 'https:' ? 443 : 80;
+      if ((_ref9 = (_base7 = this.options).timeout) == null) {
+        _base7.timeout = 3000;
+      }
+      if ((_ref10 = (_base8 = this.options).port) == null) {
+        _base8.port = this.options.protocol === 'https:' ? 443 : 80;
       }
       this.options.port = parseInt(this.options.port);
-      if ((_ref10 = (_base8 = this.options).path) == null) {
-        _base8.path = '/';
+      if ((_ref11 = (_base9 = this.options).path) == null) {
+        _base9.path = '/';
       }
-      if ((_ref11 = (_base9 = this.options).pathname) == null) {
-        _base9.pathname = this.options.path;
+      if ((_ref12 = (_base10 = this.options).pathname) == null) {
+        _base10.pathname = this.options.path;
       }
       this.options.host = "" + this.options.hostname + ":" + this.options.port;
-      if ((_ref12 = (_base10 = this.options).verbose) == null) {
-        _base10.verbose = false;
+      if ((_ref13 = (_base11 = this.options).verbose) == null) {
+        _base11.verbose = false;
       }
       delete this.options.href;
       delete this.options.url;
@@ -505,8 +507,13 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
       client.on('error', function(err) {
         return fn(err, {});
       });
-      client.end();
-      return client.on('response', function(response) {
+      client.on('socket', function(socket) {
+        socket.setTimeout(this.options.timeout);
+        return socket.on('timeout', function() {
+          return client.abort();
+        });
+      });
+      client.on('response', function(response) {
         var buffer;
         if (response.statusCode !== 200) {
           return fn({
@@ -524,6 +531,7 @@ require.define("/Git/moul/node-icecast-admin/src/Admin.coffee",function(require,
           }
         });
       });
+      return client.end();
     };
 
     Admin.prototype.parseXml = function(buffer, fn) {

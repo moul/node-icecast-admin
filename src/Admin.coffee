@@ -2,7 +2,6 @@ class Admin
   constructor: (@options) ->
     do @handleOptions
     @http = require 'http'
-    return @
 
   handleOptions: =>
     if @options.url?
@@ -15,6 +14,7 @@ class Admin
     @options.port ?=       host[1]
     @options.username ?=   'admin'
     @options.protocol ?=   'http:'
+    @options.timeout ?=    3000
     @options.port ?=       if @options.protocol is 'https:' then 443 else 80
     @options.port =        parseInt @options.port
     @options.path ?=       '/'
@@ -39,7 +39,10 @@ class Admin
         'Host':          @options.hostname
         'Authorization': 'Basic ' + new Buffer("#{@options.username}:#{@options.password}").toString('base64')
     client.on 'error', (err) -> fn err, {}
-    client.end()
+    client.on 'socket', (socket) ->
+      socket.setTimeout @options.timeout
+      socket.on 'timeout', ->
+        do client.abort
     client.on 'response', (response) ->
       if response.statusCode != 200
         return fn {"code": "BADSTATUSCODE", "message": response.statusCode}, {}
@@ -48,6 +51,7 @@ class Admin
         buffer += chunk
       response.on 'end', ->
         fn null, buffer if fn
+    client.end()
 
   parseXml: (buffer, fn = null) =>
     x2js = new (require('xml2js')).Parser {}
